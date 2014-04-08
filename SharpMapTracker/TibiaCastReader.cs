@@ -42,7 +42,7 @@ namespace SharpMapTracker
         UInt32 test1;
 
         byte currentMajorVersion = 4;
-        byte currentMinorVersion = 21;
+        byte currentMinorVersion = 22;
 
         public TibiaCastReader(Client client)
         {
@@ -167,7 +167,7 @@ namespace SharpMapTracker
             {
                 var creature = new Creature(message.ReadUInt());
                 creature.Type = (CreatureType)message.ReadByte();
-                creature.Name = message.ReadString();
+                creature.Name = message.ReadString();                
 
                 //Trace.WriteLine(String.Format("Creature[{0}]: {1}", i, creature.Name));
 
@@ -185,12 +185,12 @@ namespace SharpMapTracker
                 creature.Shield = message.ReadByte();
                 creature.Emblem = message.ReadByte();
                 creature.IsImpassable = message.ReadByte() == 0x01;
-
-                //10.20+ includes an extra 4 bytes per creature
+                
+                //10.38+ includes an extra 5 bytes per creature
                 //These bytes could alter the read order, but since I don't know what they are for yet, I'll read them out of the way.
-                message.ReadUInt();
-
+                message.ReadPosition += 5;
                 client.BattleList.AddCreature(creature);
+                
             }
 
             ParseTibiaPackets(message);
