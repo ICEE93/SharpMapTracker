@@ -188,7 +188,7 @@ namespace SharpMapTracker
                 
                 //10.38+ includes an extra 5 bytes per creature
                 //These bytes could alter the read order, but since I don't know what they are for yet, I'll read them out of the way.
-                message.ReadPosition += 5;
+                message.ReadBytes(5);
                 client.BattleList.AddCreature(creature);
                 
             }
