@@ -376,6 +376,9 @@ namespace SharpTibiaProxy.Network
                         case 0x9F:
                             ParseServerBasicData(message);
                             break;
+                        case 0x9E:
+                            ParseServerPremiumTrigger(message);
+                            break;
                         case 0xDC:
                             ParseServerShowTutorial(message);
                             break;
@@ -599,11 +602,20 @@ namespace SharpTibiaProxy.Network
         private void ParseServerBasicData(InMessage message)
         {
             var isPremmium = message.ReadByte();
+            var TimePremmium = message.ReadByte();
             var vocation = message.ReadByte();
 
             var knowSpells = message.ReadUShort();
 
             message.ReadBytes(knowSpells);
+        }
+             
+        private void ParseServerPremiumTrigger(InMessage message)
+        {
+            byte count = message.ReadByte(); //premium messages count
+            for (int i = 0; i < count; i++)
+                message.ReadByte(); //premium message id
+            message.ReadByte(); //trigger notification (boolean)
         }
 
         private void ParseServerAddMapMarker(InMessage message)
@@ -842,7 +854,7 @@ namespace SharpTibiaProxy.Network
                 case MessageClasses.SPEAK_MONSTER_SAY:
                 case MessageClasses.SPEAK_MONSTER_YELL:
                 case MessageClasses.SPEAK_SPELL:
-                case MessageClasses.NPC_FROM:
+                case MessageClasses.NPC_FROM_START_BLOCK:
                     location = message.ReadLocation();
                     break;
                 case MessageClasses.CHANNEL:
